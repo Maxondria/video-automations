@@ -65,3 +65,6 @@ group :development do
   # gem "spring"
 end
 
+gem "google-api-client", "~> 0.53.0"
+gem "pry-rails", "~> 0.3.9"
+gem "byebug", "~> 11.1"

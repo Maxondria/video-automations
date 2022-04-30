@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_28_194410) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_30_084518) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
@@ -78,6 +78,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_28_194410) do
     t.index ['description_template_id'],
             name: 'index_videos_on_description_template_id'
     t.index ['youtube_id'], name: 'index_videos_on_youtube_id', unique: true
+  end
+
+  create_table 'youtube_sessions',
+               id: :uuid,
+               default: -> { 'gen_random_uuid()' },
+               force: :cascade do |t|
+    t.string 'session_token', null: false
+    t.json 'credentials'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['session_token'], name: 'index_youtube_sessions_on_session_token'
   end
 
   add_foreign_key 'video_presenters', 'presenters'
