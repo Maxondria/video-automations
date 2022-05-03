@@ -10,6 +10,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  description_template_id :uuid             not null
+#  summary                 :text
 #
 class Video < ApplicationRecord
   belongs_to :description_template
@@ -22,5 +23,9 @@ class Video < ApplicationRecord
       ERB.new(description_template.template, trim_mode: nil, eoutvar: '_erbout')
 
     erb_template.result(binding)
+  end
+
+  def raw_tags=(raw_tags)
+    self.tags = raw_tags.split(',').map(&:strip)
   end
 end

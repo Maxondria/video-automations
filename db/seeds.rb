@@ -6,30 +6,31 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-template = DescriptionTemplate.create(template: 'test', name: 'Test Template')
+template = <<~XXX
+  <%= summary %>
 
-tonny =
+  ### Presenters
+  <% presenters.each do |presenter| %>
+    <%= presenter.name %> <%= presenter.role %> <%= presenter.twitter_url %>
+  <% end %>
+
+  <%= '### Table of contents' unless chapter_markers.blank? %>
+  <%= chapter_markers %>
+
+  <%= '### Resources' if video_resources.any? %>
+
+  <% video_resources.each do |r| %>
+    <%= r.title %>: <%= r.url %>
+  <% end %>
+XXX
+
+description_template =
+  DescriptionTemplate.create(name: 'Default', template: template)
+
+daniel =
   Presenter.create(
-    name: 'Tonny Stark',
-    twitter_handle: 'tonnystark',
-    linked_in: 'https://www.linkedin.com/in/tonnystark/',
-    role: 'CEO',
-  )
-
-mark =
-  Presenter.create(
-    name: 'Mark Zuckerberg',
-    twitter_handle: 'markzuckerberg',
-    linked_in: 'https://www.linkedin.com/in/markzuckerberg/',
-    role: 'Super hero',
-  )
-
-video =
-  Video.create!(
-    youtube_id: 'aR2jA-Co-OA',
-    title: 'Test video',
-    tags: %w[a b c],
-    chapter_markers: '00:00 start',
-    description_template: template,
-    presenters: [tonny, mark],
+    name: 'Arinda Daniel',
+    twitter_handle: 'dAnbeds',
+    linked_in: 'https://www.linkedin.com/in/arindadaniel/',
+    role: 'Sales Manager',
   )

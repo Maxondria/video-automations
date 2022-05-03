@@ -1,4 +1,10 @@
 <h1><%= @video.title %></h1>
+<%# Button to sync videos %>
+<form action="<%= sync_video_path(@video) %>" method="post">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <input type="submit" value="Sync">
+</form>
+<%# End button to sync videos %>
 <p><%= link_to "Edit", edit_video_path(@video)  %></p>
 <%= @video.youtube_id %>
 <%= @video.title %>
@@ -6,12 +12,4 @@
 <%= @video.chapter_markers %>
 <%= @video.description_template.template %>
 <textarea rows="20" cols="60"><%= @video.description %></textarea>
-<iframe 
- width="560" 
- height="315" 
- src="https://www.youtube.com/embed/<%= @video.youtube_id %>" 
- title="YouTube video player" 
- frameborder="0" 
- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
- allowfullscreen>
-</iframe>
+<%= video_embed(@video) %>

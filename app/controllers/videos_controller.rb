@@ -1,6 +1,6 @@
 class VideosController < ApplicationController
   def index
-    @videos = Video.all
+    @videos = Video.order(id: :desc)
   end
 
   def show
@@ -24,6 +24,14 @@ class VideosController < ApplicationController
     end
   end
 
+  def sync
+    video = Video.find(params.fetch(:id))
+    service = Youtube.new(YoutubeSession.last)
+
+    service.update_video(video)
+    redirect_back(fallback_location: root_path)
+  end
+
   private
 
   def video_params
@@ -32,10 +40,11 @@ class VideosController < ApplicationController
       .require(:video)
       .permit(
         :title,
-        :tags,
+        :raw_tags,
         :chapter_markers,
+        :summary,
         :description_template_id,
-        presenter_ids: []
+        presenter_ids: [],
       )
   end
 end

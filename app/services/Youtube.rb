@@ -10,7 +10,7 @@ class Youtube
     next_page_token = nil
 
     loop do
-      page =
+      search_results_page =
         service.list_searches(
           'snippet',
           for_mine: true,
@@ -23,9 +23,20 @@ class Youtube
           },
         )
 
-      page.items.each { |item| block.(item) } if block_given?
+      video_ids = search_results_page.items.map { |item| item.id.video_id }
 
-      next_page_token = page.next_page_token
+      videos_page =
+        service.list_videos(
+          'snippet',
+          id: video_ids.join(','),
+          options: {
+            authorization: auth_client,
+          },
+        )
+
+      videos_page.items.each { |item| block.(item) } if block_given?
+
+      next_page_token = search_results_page.next_page_token
 
       break if next_page_token.nil?
     end
@@ -39,6 +50,7 @@ class Youtube
           Google::Apis::YoutubeV3::VideoSnippet.new(
             description: video.description,
             title: video.title,
+            tags: video.tags,
             category_id: 27, # Education,
           ),
       )
@@ -70,6 +82,8 @@ class Youtube
             )
 
         auth_client = Signet::OAuth2::Client.new(credentials)
+        auth_client.update!(additional_parameters: { access_type: 'offline' })
+        auth_client
       end
   end
 end
