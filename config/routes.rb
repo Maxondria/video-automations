@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
     member do
       post :sync # -- /videos/:id/sync
+      get :thumb
+      post :thumb_upload
     end
   end
 

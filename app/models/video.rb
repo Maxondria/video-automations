@@ -25,6 +25,16 @@ class Video < ApplicationRecord
     erb_template.result(binding)
   end
 
+  def thumb_svg
+    img_template =
+      File.read(
+        File.join(Rails.root, 'app', 'views', 'videos', 'thumb-base.svg.erb'),
+      )
+
+    erb_template = ERB.new(img_template, trim_mode: nil, eoutvar: '_erbout')
+    erb_template.result(binding)
+  end
+
   def raw_tags=(raw_tags)
     self.tags = raw_tags.split(',').map(&:strip)
   end

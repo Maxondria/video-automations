@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_02_135139) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_05_100804) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_02_135139) do
     t.datetime "updated_at", null: false
     t.uuid "description_template_id", null: false
     t.text "summary"
+    t.string "subtitle"
     t.index ["description_template_id"], name: "index_videos_on_description_template_id"
     t.index ["youtube_id"], name: "index_videos_on_youtube_id", unique: true
   end

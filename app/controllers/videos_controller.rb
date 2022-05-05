@@ -1,21 +1,19 @@
 class VideosController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:thumb_upload]
+  before_action :set_video, only: %i[show edit update sync thumb thumb_upload]
+
   def index
     @videos = Video.order(id: :desc)
   end
 
-  def show
-    @video = Video.find(params.fetch(:id))
-  end
+  def show; end
 
   def edit
-    @video = Video.find(params.fetch(:id))
     @description_templates = DescriptionTemplate.all
     @presenters = Presenter.all
   end
 
   def update
-    @video = Video.find(params.fetch(:id))
-
     if @video.update(video_params)
       redirect_to @video
     else
@@ -25,14 +23,38 @@ class VideosController < ApplicationController
   end
 
   def sync
-    video = Video.find(params.fetch(:id))
     service = Youtube.new(YoutubeSession.last)
 
-    service.update_video(video)
+    service.update_video(@video)
     redirect_back(fallback_location: root_path)
   end
 
+  def thumb; end
+
+  def thumb_upload
+    # Extract the base64 encoded image
+    img = params[:thumbnail]['data:image/png;base64,'.length..-1]
+    decoded_img = Base64.decode64(img)
+
+    file = Tempfile.new([Time.now.to_i.to_s, '.png'])
+    file.binmode
+    file.write(decoded_img)
+    file.rewind
+
+    begin
+      service = Youtube.new(YoutubeSession.last)
+      service.set_thumbnail(@video, file)
+    ensure
+      file.close
+      file.unlink
+    end
+  end
+
   private
+
+  def set_video
+    @video = Video.find(params.fetch(:id))
+  end
 
   def video_params
     params[:video][:presenter_ids] ||= []
@@ -40,6 +62,7 @@ class VideosController < ApplicationController
       .require(:video)
       .permit(
         :title,
+        :subtitle,
         :raw_tags,
         :chapter_markers,
         :summary,
