@@ -1,42 +1,45 @@
 <% action = video.persisted? ? video_path(video) : videos_path %>
-
 <form action="<%= action %>" method="post">
   <% if video.persisted? %>
     <input type="hidden" name="_method" value="PUT">
   <% end %>
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
   <div>
     <label for="description_template">Description Template</label>
     <select name="video[description_template_id]" id="description_template">
       <% description_templates.each do |template| %>
         <option value="<%= template.id %>" <%= "selected" if video.description_template == template %>><%= template.name %></option>
-      <% end %>
-    </select>
-  </div>
-  <div>
-    <label for="title">Title</label>
-    <input type="text" name="video[title]" id="title" value="<%= video.title %>"/>
-  </div>
-  <div>
-    <label for="subtitle">Subtitle</label>
-    <input type="text" name="video[subtitle]" id="subtitle" value="<%= @video.subtitle %>">
-  </div>
-  <div>
-    <label for="summary">Summary</label>
-    <textarea name="video[summary]" id="summary" rows="8" cols="40"><%= video.summary %></textarea>
-  </div>
-  <div>
-    <label for="chapter_markers">Chapter markers</label>
-    <textarea name="video[chapter_markers]" id="chapter_markers" rows="8" cols="40"><%= video.chapter_markers %></textarea>
-  </div>
-  <div>
-    <label for="tags">Tags (comma separated)</label>
-    <input type="text" name="video[raw_tags]" id="tags" value="<%= video.tags.join(",") %>"/>
-  </div>
-  <div>
-    <% presenters.each do |presenter| %>
-      <label for="presenter-<%= presenter.id %>"><%= presenter.name %></label>
-      <input
+        <% end %>
+      </select>
+    </div>
+    <div>
+      <label for="title">Title</label>
+      <input type="text" name="video[title]" id="title" value="<%= video.title %>"/>
+    </div>
+    <div>
+      <label for="category">Category</label>
+      <select name="video[category_id]" id="category">
+        <% categories.each do |category| %>
+          <option value="<%= category.id %>" <%= "selected" if video.category == category%>><%= category.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div>
+        <label for="summary">Summary</label>
+        <textarea name="video[summary]" id="summary" rows="8" cols="40"><%= video.summary %></textarea>
+      </div>
+      <div>
+        <label for="chapter_markers">Chapter markers</label>
+        <textarea name="video[chapter_markers]" id="chapter_markers" rows="8" cols="40"><%= video.chapter_markers %></textarea>
+      </div>
+      <div>
+        <label for="tags">Tags (comma separated)</label>
+        <input type="text" name="video[raw_tags]" id="tags" value="<%= video.tags.join(",") %>"/>
+      </div>
+      <div>
+        <% presenters.each do |presenter| %>
+          <label for="presenter-<%= presenter.id %>"><%= presenter.name %></label>
+          <input
         type="checkbox"
         name="video[presenter_ids][]"
         id="presenter-<%= presenter.id %>"
@@ -44,7 +47,7 @@
         <%= "checked" if video.presenters.include?(presenter) %>
         />
     <% end %>
-  </div>
+    </div>
   <% if video.persisted? %>
     <input type="submit" value="Update Video"/>
   <% else %>

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'categories/index'
+  get 'categories/new'
+  get 'categories/edit'
   root 'videos#index'
   resources :videos, only: %i[index show edit update] do
     # collection do
@@ -14,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :presenters
   resources :description_templates
+  resources :categories, only: %i[index new create edit update]
 
   # Authenticate to YouTube Data API V3
   get '/youtube_sessions', to: 'youtube_sessions#new'

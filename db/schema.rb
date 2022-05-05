@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_05_100804) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_05_201612) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "title_color", default: "#F72585", null: false
+    t.string "subtitle_color", default: "#C2F7EB", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "description_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "template", null: false
@@ -59,7 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_100804) do
     t.datetime "updated_at", null: false
     t.uuid "description_template_id", null: false
     t.text "summary"
-    t.string "subtitle"
+    t.uuid "category_id", null: false
+    t.index ["category_id"], name: "index_videos_on_category_id"
     t.index ["description_template_id"], name: "index_videos_on_description_template_id"
     t.index ["youtube_id"], name: "index_videos_on_youtube_id", unique: true
   end
@@ -75,5 +84,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_100804) do
   add_foreign_key "video_presenters", "presenters"
   add_foreign_key "video_presenters", "videos"
   add_foreign_key "video_resources", "videos"
+  add_foreign_key "videos", "categories"
   add_foreign_key "videos", "description_templates"
 end

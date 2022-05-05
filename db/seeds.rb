@@ -34,3 +34,5 @@ daniel =
     linked_in: 'https://www.linkedin.com/in/arindadaniel/',
     role: 'Sales Manager',
   )
+
+category = Category.create(name: 'Default')

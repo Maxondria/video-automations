@@ -1,0 +1,24 @@
+<% action = category.persisted? ? category_path(category) : categories_path %>
+<form action="<%= action %>" method="post">
+  <% if category.persisted? %>
+    <input type="hidden" name="_method" value="PUT">
+  <% end %>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" name="category[name]" id="name" value="<%= category.name %>"/>
+  </div>
+  <div>
+    <label for="title_color">Title color</label>
+    <input type="color" name="category[title_color]" id="title_color" value="<%= category.title_color %>"/>
+  </div>
+  <div>
+    <label for="subtitle_color">Subtitle color</label>
+    <input type="color" name="category[subtitle_color]" id="subtitle_color" value="<%= category.subtitle_color %>"/>
+  </div>
+  <% if category.persisted? %>
+    <input type="submit" value="Update Category"/>
+  <% else %>
+    <input type="submit" value="Create"/>
+  <% end %>
+</form>

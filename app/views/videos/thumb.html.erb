@@ -1,5 +1,5 @@
 <%= @video.title %>
-<%= @video.subtitle %>
+<%= @video.category.name %>
 <button id="upload">Upload Thumbnail</button>
 <div id="svg-container"><%= @video.thumb_svg.html_safe %></div>
 <canvas id="canvas" width="1920" height="1080"></canvas>

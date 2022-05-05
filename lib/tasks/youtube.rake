@@ -10,6 +10,7 @@ namespace :youtube do
       video.title = snippet.title
       video.tags = snippet.tags || []
       video.summary = snippet.description
+      video.category = Category.first
       video.description_template = DescriptionTemplate.last
       video.save!
     end

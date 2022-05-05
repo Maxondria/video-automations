@@ -10,6 +10,7 @@ class VideosController < ApplicationController
 
   def edit
     @description_templates = DescriptionTemplate.all
+    @categories = Category.all
     @presenters = Presenter.all
   end
 
@@ -17,7 +18,7 @@ class VideosController < ApplicationController
     if @video.update(video_params)
       redirect_to @video
     else
-      flash[:alert] = @video.errors.full_messages.to_sentence
+      flash.now[:alert] = @video.errors.full_messages.to_sentence
       render 'edit'
     end
   end
@@ -62,7 +63,7 @@ class VideosController < ApplicationController
       .require(:video)
       .permit(
         :title,
-        :subtitle,
+        :category_id,
         :raw_tags,
         :chapter_markers,
         :summary,
