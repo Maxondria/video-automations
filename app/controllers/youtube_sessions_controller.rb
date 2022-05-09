@@ -50,6 +50,6 @@ class YoutubeSessionsController < ApplicationController
   end
 
   def redirect_uri
-    'http://localhost:3000/youtube_sessions/callback'
+    url_for(action: 'callback', controller: 'youtube_sessions')
   end
 end
