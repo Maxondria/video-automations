@@ -63,8 +63,10 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem "letter_opener"
 end
 
 gem "google-api-client", "~> 0.53.0"
 gem "pry-rails", "~> 0.3.9"
 gem "byebug", "~> 11.1"
+gem 'devise'

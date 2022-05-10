@@ -9,11 +9,18 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
   <body>
-    <%= link_to "Home", root_path  %>
-    <%= link_to "Description Templates", description_templates_path  %>
-    <%= link_to "Presenters", presenters_path  %>
-    <%= link_to "Categories", categories_path  %>
-    <%= link_to "Connect Youtube", youtube_sessions_path  %>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <% if user_signed_in? %>
+      <%= link_to "Home", root_path  %>
+      <%= link_to "Description Templates", description_templates_path  %>
+      <%= link_to "Presenters", presenters_path  %>
+      <%= link_to "Categories", categories_path  %>
+      <%= link_to "Connect Youtube", youtube_sessions_path  %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete  %>
+    <% else %>
+      <%= link_to "Sign in", new_user_session_path  %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

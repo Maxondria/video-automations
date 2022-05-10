@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
+  root 'videos#index'
+
+  devise_for :users
+
   get 'categories/index'
   get 'categories/new'
   get 'categories/edit'
-  root 'videos#index'
+
   resources :videos, only: %i[index show edit update] do
     # collection do
     #   post 'sync' -- /vidoes/sync
