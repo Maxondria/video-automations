@@ -3,15 +3,15 @@ class VideosController < ApplicationController
   before_action :set_video, only: %i[show edit update sync thumb thumb_upload]
 
   def index
-    @videos = Video.order(id: :desc)
+    @videos = current_user.videos.order(id: :desc)
   end
 
   def show; end
 
   def edit
-    @description_templates = DescriptionTemplate.all
-    @categories = Category.all
-    @presenters = Presenter.all
+    @description_templates = current_user.description_templates.all
+    @categories = current_user.categories.all
+    @presenters = current_user.presenters.all
   end
 
   def update
@@ -24,9 +24,11 @@ class VideosController < ApplicationController
   end
 
   def sync
-    service = Youtube.new(YoutubeSession.last)
+    unless current_user.youtube_sessions.empty?
+      service = Youtube.new(current_user.youtube_sessions.last)
+      service.update_video(@video)
+    end
 
-    service.update_video(@video)
     redirect_back(fallback_location: root_path)
   end
 
@@ -43,8 +45,10 @@ class VideosController < ApplicationController
     file.rewind
 
     begin
-      service = Youtube.new(YoutubeSession.last)
-      service.set_thumbnail(@video, file)
+      unless current_user.youtube_sessions.empty?
+        service = Youtube.new(current_user.youtube_sessions.last)
+        service.set_thumbnail(@video, file)
+      end
     ensure
       file.close
       file.unlink
@@ -54,7 +58,7 @@ class VideosController < ApplicationController
   private
 
   def set_video
-    @video = Video.find(params.fetch(:id))
+    @video = current_user.videos.find(params.fetch(:id))
   end
 
   def video_params

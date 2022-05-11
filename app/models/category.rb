@@ -8,7 +8,9 @@
 #  subtitle_color :string           default("#C2F7EB"), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  user_id        :uuid             not null
 #
 class Category < ApplicationRecord
   has_many :videos, dependent: :destroy
+  belongs_to :user
 end

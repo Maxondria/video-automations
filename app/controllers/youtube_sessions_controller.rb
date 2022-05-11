@@ -10,9 +10,22 @@ class YoutubeSessionsController < ApplicationController
     auth_client.fetch_access_token!
     auth_client.client_secret = nil
 
+    temp_session = YoutubeSession.new(credentials: auth_client.to_json)
+    service = Youtube.new(temp_session)
+
+    users_channel = service.fetch_channel
+
+    if current_user.youtube_channel_id.blank?
+      current_user.update!(youtube_channel_id: users_channel&.id)
+    elsif current_user.youtube_channel_id != users_channel&.id
+      flash[:alert] = 'You are not authorized to access this channel.'
+      redirect_to(root_path) and return
+    end
+
     # store the auth client credentials in the database
-    YoutubeSession.create!(credentials: auth_client.to_json)
-    redirect_to(root_path)
+    current_user.youtube_sessions << temp_session
+
+    redirect_to(root_path) and return
   end
 
   def auth_client

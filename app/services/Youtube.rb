@@ -75,6 +75,19 @@ class Youtube
     )
   end
 
+  def fetch_channel
+    channels =
+      service.list_channels(
+        'id',
+        mine: true,
+        options: {
+          authorization: auth_client,
+        },
+      )
+
+    channels.items.first
+  end
+
   private
 
   def service

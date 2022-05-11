@@ -1,18 +1,20 @@
 class PresentersController < ApplicationController
+  before_action :set_presenter, except: %i[index new create destroy]
+
   def index
-    @presenters = Presenter.all
+    @presenters = current_user.presenters.all
   end
 
   def new
-    @presenter = Presenter.new
+    @presenter = current_user.presenters.new
   end
 
-  def show
-    @presenter = Presenter.find(params.fetch(:id))
-  end
+  def show; end
+
+  def edit; end
 
   def create
-    @presenter = Presenter.new(presenter_params)
+    @presenter = current_user.presenters.build(presenter_params)
 
     if @presenter.save
       redirect_to presenters_path
@@ -23,8 +25,6 @@ class PresentersController < ApplicationController
   end
 
   def update
-    @presenter = Presenter.find(params.fetch(:id))
-
     if @presenter.update(presenter_params)
       redirect_to presenters_path
     else
@@ -33,13 +33,13 @@ class PresentersController < ApplicationController
     end
   end
 
-  def edit
-    @presenter = Presenter.find(params.fetch(:id))
-  end
-
   private
 
   def presenter_params
     params.require(:presenter).permit(:name, :twitter_handle, :linked_in, :role)
+  end
+
+  def set_presenter
+    @presenter = current_user.presenters.find(params.fetch(:id))
   end
 end

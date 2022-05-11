@@ -1,15 +1,17 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update]
+
   def index
-    @categories = Category.all
+    @categories = current_user.categories.all
   end
 
   def new
-    @category = Category.new
+    @category = current_user.categories.new
   end
 
   def create
-    @category = Category.new(category_params)
+    @category = current_user.categories.build(category_params)
+
     if @category.save
       redirect_to categories_path
     else
@@ -32,7 +34,7 @@ class CategoriesController < ApplicationController
   private
 
   def set_category
-    @category = Category.find(params.fetch(:id))
+    @category = current_user.categories.find(params.fetch(:id))
   end
 
   def category_params

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_11_074831) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
@@ -24,6 +24,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.string 'subtitle_color', default: '#C2F7EB', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.uuid 'user_id', null: false
+    t.index ['user_id'], name: 'index_categories_on_user_id'
   end
 
   create_table 'description_templates',
@@ -34,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.string 'name', null: false
+    t.uuid 'user_id', null: false
+    t.index ['user_id'], name: 'index_description_templates_on_user_id'
   end
 
   create_table 'presenters',
@@ -46,6 +50,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.string 'role'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.uuid 'user_id', null: false
+    t.index ['user_id'], name: 'index_presenters_on_user_id'
   end
 
   create_table 'users',
@@ -71,6 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.datetime 'locked_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.string 'youtube_channel_id'
     t.index ['confirmation_token'],
             name: 'index_users_on_confirmation_token',
             unique: true
@@ -121,9 +128,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.uuid 'description_template_id', null: false
     t.text 'summary'
     t.uuid 'category_id', null: false
+    t.uuid 'user_id', null: false
     t.index ['category_id'], name: 'index_videos_on_category_id'
     t.index ['description_template_id'],
             name: 'index_videos_on_description_template_id'
+    t.index ['user_id'], name: 'index_videos_on_user_id'
     t.index ['youtube_id'], name: 'index_videos_on_youtube_id', unique: true
   end
 
@@ -135,12 +144,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_09_203332) do
     t.json 'credentials'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.uuid 'user_id', null: false
     t.index ['session_token'], name: 'index_youtube_sessions_on_session_token'
+    t.index ['user_id'], name: 'index_youtube_sessions_on_user_id'
   end
 
+  add_foreign_key 'categories', 'users'
+  add_foreign_key 'description_templates', 'users'
+  add_foreign_key 'presenters', 'users'
   add_foreign_key 'video_presenters', 'presenters'
   add_foreign_key 'video_presenters', 'videos'
   add_foreign_key 'video_resources', 'videos'
   add_foreign_key 'videos', 'categories'
   add_foreign_key 'videos', 'description_templates'
+  add_foreign_key 'videos', 'users'
+  add_foreign_key 'youtube_sessions', 'users'
 end
