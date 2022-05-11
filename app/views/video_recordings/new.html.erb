@@ -1,0 +1,49 @@
+<h1>Record a new video</h1>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<div>
+  <video id="live"  height="200" width="300"  autoplay muted style="border: 1px solid black;"></video>
+</div>
+<div>
+  <video id="playback" height="200" width="300"  style="border: 1px solid black;" controls></video>
+</div>
+<script charset="utf-8">
+  (async () => {
+   const startBtn = document.getElementById('start');
+   const stopBtn = document.getElementById('stop');
+   const liveVideo = document.getElementById('live');
+   const playbackVideo = document.getElementById('playback');
+
+   const stream = await navigator.mediaDevices.getUserMedia({
+     audio: true,
+     video: true
+   })
+
+   liveVideo.srcObject = stream;
+
+   const recorder = new MediaRecorder(stream);
+
+   const chunks = [];
+
+   recorder.ondataavailable = e => {
+        const blob = e.data;
+        chunks.push(blob);
+   }
+
+   startBtn.addEventListener('click', (e) => {
+       e.preventDefault();
+       // start recording
+       recorder.start();
+   })
+
+   stopBtn.addEventListener('click', (e) => {
+       e.preventDefault();
+       //stop recording
+         recorder.stop();
+         setTimeout(() => {
+              playbackVideo.src = URL.createObjectURL(new Blob(chunks, { type: 'video/mp4' }));
+              playbackVideo.play();
+         }, 500);
+   })
+  })();
+</script>

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :presenters
   resources :description_templates
   resources :categories, only: %i[index new create edit update]
+  resources :video_recordings, only: %i[new create]
 
   # Authenticate to YouTube Data API V3
   get '/youtube_sessions', to: 'youtube_sessions#new'
