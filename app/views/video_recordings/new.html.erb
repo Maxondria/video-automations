@@ -41,8 +41,21 @@
        //stop recording
          recorder.stop();
          setTimeout(() => {
-              playbackVideo.src = URL.createObjectURL(new Blob(chunks, { type: 'video/mp4' }));
-              playbackVideo.play();
+             const form = new FormData();
+             form.append('video_recording[file]', new Blob(chunks, { type: 'video/webm' }));
+
+            fetch('<%= video_recordings_path %>', {
+                method: 'POST',
+                body: form
+                })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Success:", data);
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+            //   playbackVideo.src = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
+            //   playbackVideo.play();
          }, 500);
    })
   })();

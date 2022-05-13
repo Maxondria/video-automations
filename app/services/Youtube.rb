@@ -42,6 +42,30 @@ class Youtube
     end
   end
 
+  def upload_video(file, title, description)
+    status =
+      Google::Apis::YoutubeV3::VideoStatus.new(privacy_status: 'unlisted')
+
+    snippet =
+      Google::Apis::YoutubeV3::VideoSnippet.new(
+        title: title,
+        description: description,
+      )
+
+    video = Google::Apis::YoutubeV3::Video.new(status: status, snippet: snippet)
+
+    service.insert_video(
+      'id,snippet,status',
+      video,
+      notify_subscribers: false,
+      upload_source: file,
+      content_type: 'video/webm',
+      options: {
+        authorization: auth_client,
+      },
+    )
+  end
+
   def update_video(video)
     external_video =
       Google::Apis::YoutubeV3::Video.new(
