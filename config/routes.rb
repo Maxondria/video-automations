@@ -1,3 +1,5 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
   root 'videos#index'
 
@@ -23,6 +25,11 @@ Rails.application.routes.draw do
   resources :description_templates
   resources :categories, only: %i[index new create edit update]
   resources :video_recordings, only: %i[new create]
+
+  # authenticate :user, ->(u) { u.admin? } do
+  authenticate :user do
+    mount Resque::Server.new, at: '/jobs'
+  end
 
   # Authenticate to YouTube Data API V3
   get '/youtube_sessions', to: 'youtube_sessions#new'

@@ -36,5 +36,8 @@ module VideoAutomations
 
     # Default to UUID primary key
     config.generators { |g| g.orm :active_record, primary_key_type: :uuid }
+
+    # active job queue adapter
+    config.active_job.queue_adapter = :resque
   end
 end
