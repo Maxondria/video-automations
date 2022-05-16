@@ -112,6 +112,11 @@ class Youtube
     channels.items.first
   end
 
+  def refresh_token
+    # returns the refresh token data
+    auth_client.refresh!
+  end
+
   private
 
   def service
